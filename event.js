@@ -1,6 +1,6 @@
 // requireJS module for handling event notifications between tasks
 define([], function () {
-  //"use strict";
+  "use strict";
   var my = {
     },
     eventHandlers = {};
@@ -10,6 +10,20 @@ define([], function () {
       eventHandlers[eventname] = [];
     }
     eventHandlers[eventname].push(func);
+    return my;
+  };
+  
+  my.addListenerOnce = function(eventname,func) {
+    var once = function () {
+      var args = arguments;
+      func.apply(my,args);
+      my.removeListener(eventname,once);
+    };
+    my.addListener(
+      eventname,
+      once
+    );
+    return my;
   };
   
   my.removeListener = function (eventname, func) {
@@ -35,6 +49,7 @@ define([], function () {
         }
       }
     }
+    return my;
   };
 
   return my;  // return public interface
